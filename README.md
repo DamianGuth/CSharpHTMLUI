@@ -39,6 +39,6 @@ Here is a template for the index.html
 # Goal
 The Goal is to be able to create complete form applications using HTML, CSS and JavaScript which can be deployed onto other devices.
 
-# More Information
+# More nformation
 As you might be able to see, this Readme is quite empty. So any help with the support is appreciated! Lets see how far this project will go.
 
