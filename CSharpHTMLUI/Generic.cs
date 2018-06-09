@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace CSharpHTMLUI
 {
@@ -27,6 +25,25 @@ namespace CSharpHTMLUI
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[Random.Next(s.Length)]).ToArray());
+        }
+
+        /// <summary>
+        /// Removes overhead and makes the html file harder to read.
+        /// </summary>
+        /// <param name="html">The parsed html file</param>
+        /// <returns>The new html content</returns>
+        public static string MinifyHTML(string html)
+        {
+            html = Regex.Replace(html, @"[a-zA-Z]+#", "#");
+            html = Regex.Replace(html, @"[\n\r]+\s*", string.Empty);
+            html = Regex.Replace(html, @"\s+", " ");
+            html = Regex.Replace(html, @"\s?([:,;{}])\s?", "$1");
+            html = html.Replace(";}", "}");
+            html = Regex.Replace(html, @"([\s:]0)(px|pt|%|em)", "$1");
+
+            /// Remove comments
+            html = Regex.Replace(html, @"/\*[\d\D]*?\*/", string.Empty);
+            return html;
         }
 
     }
