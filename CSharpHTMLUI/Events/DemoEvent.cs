@@ -16,9 +16,7 @@ namespace CSharpHTMLUI.Events
             Form1.webBrowser.Document.InvokeScript("eval", new Object[] { "(function() { document.getElementById(\"" + "body" + "\").style.backgroundColor = \"blue\" })()" });
             Browser.SetText("TESTBUTTON", "CoolText");
             Browser.SetText("coolDemo", Generic.GetRandomString(32));
-            Browser.GenerateElement("p", "", "coolDemo");
-
-            Logger.Log(Form1.webBrowser.Document.Body.OuterHtml);
+            Browser.GenerateElement("p", "TEXT", "body");
         }
     }
 }
