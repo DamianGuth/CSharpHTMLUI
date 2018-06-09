@@ -88,10 +88,12 @@ namespace CSharpHTMLUI
 
 
         public static WebBrowser webBrowser;
+        public static Form1 instace;
 
         public Form1()
         {
             InitializeComponent();
+            instace = this;
             this.panel1.Width = this.Width - 6;
             this.panel1.Height = this.Height - 35;
 
@@ -127,6 +129,11 @@ namespace CSharpHTMLUI
         private void button2_Click_1(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        {
+            lblTitle.Text = webBrowser.Document.InvokeScript("eval", new Object[] { "document.title.toString()" }).ToString();
         }
 
 
