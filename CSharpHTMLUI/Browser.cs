@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CSharpHTMLUI
 {
@@ -20,8 +21,20 @@ namespace CSharpHTMLUI
 
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-            Form1.webBrowser.Navigate(baseDirectory + "test.html");
+            // Visit the index page
+            Form1.webBrowser.Navigate(baseDirectory + "index.html");
             Form1.webBrowser.ObjectForScripting = new Logger();
+        }
+
+        public static void SetText(string elementID, string text)
+        {
+            try
+            {
+                Form1.webBrowser.Document.GetElementById(elementID).InnerText = text;
+            }
+            catch (Exception ex)
+            {
+            }
         }
     }
 }
