@@ -36,5 +36,27 @@ namespace CSharpHTMLUI
             {
             }
         }
+
+        /// <summary>
+        /// Generates an HTML element
+        /// </summary>
+        /// <param name="type">The type of the element</param>
+        /// <param name="id">The id that element should get. If this field is empty a random id will be generated</param>
+        public static void GenerateElement(string type, string elementText = "", string appendToId = "", string id = "")
+        {
+            if (id == "")
+                id = Generic.GetRandomString(Generic.IDLength);
+
+            if (appendToId == "")
+                appendToId = "body";
+
+            HtmlElement element = Form1.webBrowser.Document.CreateElement(type);
+            element.Id = id;
+
+            if (elementText != "")
+                element.InnerText = elementText;
+
+            Form1.webBrowser.Document.GetElementById(appendToId).AppendChild(element);
+        }
     }
 }
