@@ -1,10 +1,7 @@
 ﻿using IEFixLib;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace CSharpHTMLUI
@@ -20,21 +17,39 @@ namespace CSharpHTMLUI
             BrowserSetup.SetupBrowser(processName, 11);
 
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            LoadPages();
 
             // Visit the index page
-            Form1.webBrowser.Navigate(baseDirectory + "index.html");
+            Form1.webBrowser.Navigate(baseDirectory + "F/index.html");
             Form1.webBrowser.ObjectForScripting = new HTMLBridge();
         }
 
-        public static void SetText(string elementID, string text)
+        private static void LoadPages()
         {
-            try
-            {
-                Form1.webBrowser.Document.GetElementById(elementID).InnerText = text;
-            }
-            catch (Exception ex)
-            {
-            }
+            // Need a way to get the name of the file. That way the file could be re-generated safely
+
+            //var assembly = Assembly.GetExecutingAssembly();
+
+            //foreach (var resourceName in assembly.GetManifestResourceNames())
+            //    System.Console.WriteLine("ASM:" + resourceName);
+
+            //foreach (var resourceName in assembly.GetManifestResourceNames())
+            //{
+            //    using (var stream = assembly.GetManifestResourceStream(resourceName))
+            //    {
+            //        StreamReader streamReader = new StreamReader(stream);
+            //        string html = streamReader.ReadToEnd();
+            //        Console.WriteLine("MYRES:" + html);
+            //        Console.WriteLine("END MY RES");
+            //        //      string html = streamReader.ReadToEnd();
+            //        File.WriteAllText(resourceName + "1", html);
+            //        Console.WriteLine("");
+            //    }
+            //}
+            if (!Directory.Exists("F/"))
+                Directory.CreateDirectory("F/");
+
+            File.WriteAllText("F/index.html", Generic.MinifyHTML(CSharpHTMLUI.Properties.Resources.index));
         }
 
         /// <summary>
@@ -58,5 +73,23 @@ namespace CSharpHTMLUI
 
             Form1.webBrowser.Document.GetElementById(appendToId).AppendChild(element);
         }
+
+
+        /// <summary>
+        /// Sets the text of an HTML element
+        /// </summary>
+        /// <param name="elementID"></param>
+        /// <param name="text"></param>
+        public static void SetText(string elementID, string text)
+        {
+            try
+            {
+                Form1.webBrowser.Document.GetElementById(elementID).InnerText = text;
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
     }
 }
