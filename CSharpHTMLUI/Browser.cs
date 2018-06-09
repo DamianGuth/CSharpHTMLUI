@@ -23,7 +23,7 @@ namespace CSharpHTMLUI
 
             // Visit the index page
             Form1.webBrowser.Navigate(baseDirectory + "index.html");
-            Form1.webBrowser.ObjectForScripting = new Logger();
+            Form1.webBrowser.ObjectForScripting = new HTMLBridge();
         }
 
         public static void SetText(string elementID, string text)

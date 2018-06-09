@@ -3,7 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 
 [ComVisible(true)]
-public class Logger
+public class HTMLBridge
 {
     public void Send(string s)
     {
