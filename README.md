@@ -12,9 +12,9 @@ Here is a template for the index.html
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta http-equiv="X-UA-Compatible" content="ie=11"/>
-		<title>TEST</title>
-		<meta http-equiv="cache-control" content="no-cache" />
-		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<title>TEST</title>
+	<meta http-equiv="cache-control" content="no-cache" />
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     </head>
 
     <body id="body">
