@@ -42,3 +42,7 @@ The Goal is to be able to create complete form applications using HTML, CSS and 
 # More information
 As you might be able to see, this Readme is quite empty. So any help with the support is appreciated! Lets see how far this project will go.
 
+# First Todo´s
+- Add control caching for fast UI changes
+- Implement the site-name in the html to be able to re-generate html from resources
+- Add encryption to the rebuild, minified, html pages
