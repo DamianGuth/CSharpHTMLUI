@@ -133,7 +133,7 @@ namespace CSharpHTMLUI
 
         private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            lblTitle.Text = webBrowser.Document.InvokeScript("eval", new Object[] { "document.title.toString()" }).ToString();
+            lblTitle.Text = webBrowser.Document.Title;
         }
 
 
