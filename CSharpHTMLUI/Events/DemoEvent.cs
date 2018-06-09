@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace CSharpHTMLUI.Events
 {
@@ -20,6 +15,10 @@ namespace CSharpHTMLUI.Events
         {
             Form1.webBrowser.Document.InvokeScript("eval", new Object[] { "(function() { document.getElementById(\"" + "body" + "\").style.backgroundColor = \"blue\" })()" });
             Browser.SetText("TESTBUTTON", "CoolText");
+            Browser.SetText("coolDemo", Generic.GetRandomString(32));
+            Browser.GenerateElement("p", "", "coolDemo");
+
+            Logger.Log(Form1.webBrowser.Document.Body.OuterHtml);
         }
     }
 }
