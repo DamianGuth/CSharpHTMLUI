@@ -19,8 +19,7 @@ namespace CSharpHTMLUI.Events
         public void OnClick()
         {
             Form1.webBrowser.Document.InvokeScript("eval", new Object[] { "(function() { document.getElementById(\"" + "body" + "\").style.backgroundColor = \"blue\" })()" });
-            Console.WriteLine("CLICK CALLED");
-            MessageBox.Show("This is a message from c# <3");
+            Browser.SetText("TESTBUTTON", "CoolText");
         }
     }
 }
