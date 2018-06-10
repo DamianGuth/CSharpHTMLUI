@@ -9,7 +9,7 @@ The HTML pages have to contain
 - &lt;!--Name:index.html:--&gt;
 
 above the DOCTYPE and 
-- <!--EOF-->
+- &lt;!--EOF--&gt;
 
 in the last line of the file.
 
