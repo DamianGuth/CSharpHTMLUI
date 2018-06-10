@@ -5,8 +5,8 @@ This project creates a base for designing forms within a C# application using HT
 After you cloned the project, you need to create a default page. The application will search the default page in the same folder as the executable is in and it should be named 'index.html'.
 
 The HTML pages have to contain 
-- <!--Meta:Info:-->
-- <!--Name:NAMEofTHEfile.html:-->
+- &lt;!--Meta:Info:--&gt;
+- &lt;!--Name:index.html:--&gt;
 
 above the DOCTYPE and 
 - <!--EOF-->
