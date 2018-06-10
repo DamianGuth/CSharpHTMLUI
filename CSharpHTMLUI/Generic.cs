@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace CSharpHTMLUI
 {
@@ -44,6 +46,20 @@ namespace CSharpHTMLUI
             /// Remove comments
             html = Regex.Replace(html, @"/\*[\d\D]*?\*/", string.Empty);
             return html;
+        }
+
+
+        /// <summary>
+        /// Closes the application and does some cleanup
+        /// </summary>
+        public static void Exit()
+        {
+            if (Directory.Exists("F/"))
+            {
+                Directory.Delete("F/", true);
+            }
+
+            Application.Exit();
         }
 
     }
