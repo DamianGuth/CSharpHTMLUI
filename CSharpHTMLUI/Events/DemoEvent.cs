@@ -17,6 +17,7 @@ namespace CSharpHTMLUI.Events
             Browser.SetText("TESTBUTTON", "CoolText");
             Browser.SetText("coolDemo", Generic.GetRandomString(32));
             Browser.GenerateElement("p", "TEXT", "body");
+            Browser.LoadCachedPage("indexKopie.html");
         }
     }
 }
