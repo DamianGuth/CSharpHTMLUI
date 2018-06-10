@@ -107,6 +107,9 @@ namespace CSharpHTMLUI
             DemoEvent devent = new DemoEvent();
             HTMLEventHandler.RegisterEvent(devent);
 
+            CalculateBtnEvent cevent = new CalculateBtnEvent();
+            HTMLEventHandler.RegisterEvent(cevent);
+
             this.SetStyle(ControlStyles.ResizeRedraw, true); // This is to avoid visual artifacts
 
             //webBrowser1.DocumentText = "<script>external.log('TEST');</script>";
@@ -134,6 +137,7 @@ namespace CSharpHTMLUI
         private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
             lblTitle.Text = webBrowser.Document.Title;
+            Browser.InjectMethods();
         }
 
 
