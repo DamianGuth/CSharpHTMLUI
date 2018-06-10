@@ -1,4 +1,5 @@
 ﻿using IEFixLib;
+using mshtml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,7 +31,7 @@ namespace CSharpHTMLUI
             LoadPages();
 
             // Visit the index page
-            Form1.webBrowser.Navigate(baseDirectory + "F/index.html");
+            Form1.webBrowser.Navigate(baseDirectory + "F/indexKopie.html");
             Form1.webBrowser.ObjectForScripting = new HTMLBridge();
         }
 
@@ -144,6 +145,19 @@ namespace CSharpHTMLUI
         }
 
         /// <summary>
+        /// Injects all base methods into the current page
+        /// </summary>
+        public static void InjectMethods()
+        {
+            // Inject the method to get the text of an item
+            HtmlElement htmlHead = Form1.webBrowser.Document.GetElementsByTagName("head")[0];
+            HtmlElement getInnerTextScript = Form1.webBrowser.Document.CreateElement("script");
+            IHTMLScriptElement element = (IHTMLScriptElement)getInnerTextScript.DomElement;
+            element.text = "function getInnerText(id) {return document.getElementById(id).value;}";
+            htmlHead.AppendChild(getInnerTextScript);
+        }
+
+        /// <summary>
         /// Generates an HTML element
         /// </summary>
         /// <param name="type">The type of the element</param>
@@ -180,6 +194,16 @@ namespace CSharpHTMLUI
             catch (Exception ex)
             {
             }
+        }
+
+        /// <summary>
+        /// Gets the text of an element
+        /// </summary>
+        /// <param name="id">The id of the element to get the text from</param>
+        /// <returns>The text of the element</returns>
+        public static string GetElementText(string id)
+        {
+            return (string)Form1.webBrowser.Document.InvokeScript("getInnerText", new string[] { id });
         }
 
     }
