@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace CSharpHTMLUI
@@ -26,30 +27,86 @@ namespace CSharpHTMLUI
 
         private static void LoadPages()
         {
-            // Need a way to get the name of the file. That way the file could be re-generated safely
+            int count = 0;
 
-            //var assembly = Assembly.GetExecutingAssembly();
-
-            //foreach (var resourceName in assembly.GetManifestResourceNames())
-            //    System.Console.WriteLine("ASM:" + resourceName);
-
-            //foreach (var resourceName in assembly.GetManifestResourceNames())
-            //{
-            //    using (var stream = assembly.GetManifestResourceStream(resourceName))
-            //    {
-            //        StreamReader streamReader = new StreamReader(stream);
-            //        string html = streamReader.ReadToEnd();
-            //        Console.WriteLine("MYRES:" + html);
-            //        Console.WriteLine("END MY RES");
-            //        //      string html = streamReader.ReadToEnd();
-            //        File.WriteAllText(resourceName + "1", html);
-            //        Console.WriteLine("");
-            //    }
-            //}
-            if (!Directory.Exists("F/"))
+            if (Directory.Exists("F/"))
+            {
+                Directory.Delete("F/", true);
                 Directory.CreateDirectory("F/");
+            }
 
-            File.WriteAllText("F/index.html", Generic.MinifyHTML(CSharpHTMLUI.Properties.Resources.index));
+            if (!Directory.Exists("F/"))
+            {
+                Directory.CreateDirectory("F/");
+                System.Threading.Thread.Sleep(400);
+            }
+
+
+
+            var assembly = Assembly.GetExecutingAssembly();
+
+            foreach (var resourceName in assembly.GetManifestResourceNames())
+                System.Console.WriteLine("ASM:" + resourceName);
+
+            foreach (var resourceName in assembly.GetManifestResourceNames())
+            {
+                count++;
+                if (count == 1)
+                    continue;
+
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    StreamReader streamReader = new StreamReader(stream);
+
+                    string content = streamReader.ReadToEnd();
+
+                    string[] files = content.Split(new string[] { "<!--EOF-->" }, StringSplitOptions.None);
+
+
+                    for (int i = 0; i < files.Length; i++)
+                    {
+                        if (files[i] == "")
+                            continue;
+
+                        string html = "";
+                        string fileName = "";
+
+                        // Get file lines
+                        string[] splitLines = files[i].Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+                        int splitIndex = (i == 0) ? 1 : 0;
+
+                        // Get the first line
+                        string[] firstLine = splitLines[splitIndex].Split(':');
+
+                        // Set the filename
+                        if (firstLine != null && firstLine.Length >= 2)
+                        {
+                            fileName = firstLine[1];
+                        }
+
+                        int yIndex = (i == 0) ? 1 : 0;
+
+                        // For each line of the file
+                        for (int y = 0; y < splitLines.Length; y++)
+                        {
+                            if (y > yIndex)
+                            {
+                                html += splitLines[y];
+                            }
+                        }
+
+                        // Wait for windows to create the folder...
+                        if (!Directory.Exists("F/"))
+                        {
+                            System.Threading.Thread.Sleep(400);
+                        }
+
+                        // Create the file
+                        File.WriteAllText("F/" + fileName, Generic.MinifyHTML(html));
+                    }
+                }
+            }
         }
 
         /// <summary>
