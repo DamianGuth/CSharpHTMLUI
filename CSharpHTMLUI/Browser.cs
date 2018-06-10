@@ -1,5 +1,6 @@
 ﻿using IEFixLib;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -9,6 +10,14 @@ namespace CSharpHTMLUI
 {
     public class Browser
     {
+        private static List<CachedPage> CachedPages = new List<CachedPage>();
+
+        public struct CachedPage
+        {
+            public string name;
+            public string html;
+        };
+
         public static void Initialize()
         {
             string processName = Process.GetCurrentProcess().ProcessName + ".exe";
@@ -40,8 +49,6 @@ namespace CSharpHTMLUI
                 Directory.CreateDirectory("F/");
                 System.Threading.Thread.Sleep(400);
             }
-
-
 
             var assembly = Assembly.GetExecutingAssembly();
 
@@ -96,6 +103,14 @@ namespace CSharpHTMLUI
                             }
                         }
 
+                        // Create a new cachedpage for the current page
+                        CachedPage page = new CachedPage();
+                        page.name = fileName;
+                        page.html = html;
+
+                        // Add the page to the cache
+                        CachedPages.Add(page);
+
                         // Wait for windows to create the folder...
                         if (!Directory.Exists("F/"))
                         {
@@ -105,6 +120,28 @@ namespace CSharpHTMLUI
                         // Create the file
                         File.WriteAllText("F/" + fileName, Generic.MinifyHTML(html));
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Loads a cached page by name
+        /// </summary>
+        /// <param name="name">The name of the page to load (must contain file endings!)</param>
+        public static void LoadCachedPage(string name)
+        {
+            // Find the correct page
+            foreach (CachedPage cp in CachedPages)
+            {
+                if (cp.name == name)
+                {
+                    Form1.webBrowser.DocumentText = "0";
+                    Form1.webBrowser.Document.OpenNew(true);
+                    Form1.webBrowser.Document.Write(cp.html);
+                    Form1.webBrowser.Refresh();
+
+                    // Exit the loop
+                    break;
                 }
             }
         }
