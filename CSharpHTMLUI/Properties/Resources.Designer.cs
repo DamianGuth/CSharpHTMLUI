@@ -61,7 +61,36 @@ namespace CSharpHTMLUI.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die &lt;!DOCTYPE html&gt;
+        ///   Sucht eine lokalisierte Zeichenfolge, die &lt;!--Meta:Info:--&gt;
+        ///&lt;!--Name:index.html:--&gt;
+        ///&lt;!DOCTYPE html&gt;
+        ///&lt;html lang=&quot;en&quot;&gt;
+        ///
+        ///    &lt;head&gt;
+        ///        &lt;meta charset=&quot;UTF-8&quot;/&gt;
+        ///        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;/&gt;
+        ///        &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=11&quot;/&gt;
+        ///		&lt;title&gt;TEST&lt;/title&gt;
+        ///		&lt;meta http-equiv=&quot;cache-control&quot; content=&quot;no-cache&quot; /&gt;
+        ///		&lt;script src=&quot;https://code.jquery.com/jquery-1.12.4.js&quot;&gt;&lt;/script&gt;
+        ///
+        ///		
+        ///        &lt;script&gt;
+        ///            function logID(id)
+        ///			{
+        ///				external.Send(id);
+        ///			}
+        ///		 [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        /// </summary>
+        internal static string index {
+            get {
+                return ResourceManager.GetString("index", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die &lt;!--Name:indexKopie.html:--&gt;
+        ///&lt;!DOCTYPE html&gt;
         ///&lt;html lang=&quot;en&quot;&gt;
         ///
         ///    &lt;head&gt;
@@ -79,13 +108,11 @@ namespace CSharpHTMLUI.Properties {
         ///				external.Send(id);
         ///			}
         ///			
-        ///			/*function reply_click()
-        ///			{
-        ///			    [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        ///			/*functi [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
         /// </summary>
-        internal static string index {
+        internal static string indexKopie {
             get {
-                return ResourceManager.GetString("index", resourceCulture);
+                return ResourceManager.GetString("indexKopie", resourceCulture);
             }
         }
     }
