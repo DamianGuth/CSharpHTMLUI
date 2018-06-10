@@ -53,9 +53,6 @@ namespace CSharpHTMLUI
             var assembly = Assembly.GetExecutingAssembly();
 
             foreach (var resourceName in assembly.GetManifestResourceNames())
-                System.Console.WriteLine("ASM:" + resourceName);
-
-            foreach (var resourceName in assembly.GetManifestResourceNames())
             {
                 count++;
                 if (count == 1)
