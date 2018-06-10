@@ -17,12 +17,12 @@ namespace CSharpHTMLUI.Events
 
         public void OnClick()
         {
-            int result = 0;
-            int firstBox = 0;
-            int scndBox = 0;
+            long result = 0;
+            long firstBox = 0;
+            long scndBox = 0;
 
-            int.TryParse(Browser.GetElementText("firstBox"), out firstBox);
-            int.TryParse(Browser.GetElementText("secondBox"), out scndBox);
+            long.TryParse(Browser.GetElementText("firstBox"), out firstBox);
+            long.TryParse(Browser.GetElementText("secondBox"), out scndBox);
 
             try
             {
