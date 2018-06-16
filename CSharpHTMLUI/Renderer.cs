@@ -9,9 +9,11 @@ using System.Windows.Forms;
 
 namespace CSharpHTMLUI
 {
-    public class Browser
+    public class Renderer
     {
-        private static List<CachedPage> CachedPages = new List<CachedPage>();
+        private static List<CachedPage> ResourceLoadedPages = new List<CachedPage>();
+        public static List<CachedPage> CachedPages = new List<CachedPage>();
+        public static CachedPage CurrentPage = new CachedPage();
 
         public struct CachedPage
         {
@@ -32,6 +34,8 @@ namespace CSharpHTMLUI
 
             // Visit the index page
             Form1.webBrowser.Navigate(baseDirectory + "F/indexKopie.html");
+            CurrentPage.name = "indexKopie.html";
+            CurrentPage.html = Form1.webBrowser.DocumentText;
             Form1.webBrowser.ObjectForScripting = new HTMLBridge();
         }
 
@@ -79,7 +83,7 @@ namespace CSharpHTMLUI
                         // Get file lines
                         string[] splitLines = files[i].Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
-                        int splitIndex = (i == 0) ? 1 : 0;
+                        int splitIndex = (i == 0) ? 1 : 1;
 
                         // Get the first line
                         string[] firstLine = splitLines[splitIndex].Split(':');
@@ -90,7 +94,7 @@ namespace CSharpHTMLUI
                             fileName = firstLine[1];
                         }
 
-                        int yIndex = (i == 0) ? 1 : 0;
+                        int yIndex = (i == 0) ? 1 : 1;
 
                         // For each line of the file
                         for (int y = 0; y < splitLines.Length; y++)
@@ -107,7 +111,7 @@ namespace CSharpHTMLUI
                         page.html = html;
 
                         // Add the page to the cache
-                        CachedPages.Add(page);
+                        ResourceLoadedPages.Add(page);
 
                         // Wait for windows to create the folder...
                         if (!Directory.Exists("F/"))
@@ -120,6 +124,7 @@ namespace CSharpHTMLUI
                     }
                 }
             }
+            CachedPages = ResourceLoadedPages;
         }
 
         /// <summary>
@@ -128,6 +133,7 @@ namespace CSharpHTMLUI
         /// <param name="name">The name of the page to load (must contain file endings!)</param>
         public static void LoadCachedPage(string name)
         {
+            UpdateLocalCache();
             // Find the correct page
             foreach (CachedPage cp in CachedPages)
             {
@@ -138,7 +144,83 @@ namespace CSharpHTMLUI
                     Form1.webBrowser.Document.Write(cp.html);
                     Form1.webBrowser.Refresh();
 
+                    CurrentPage.name = name;
+                    CurrentPage.html = cp.html;
                     // Exit the loop
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Loads a page from the resources
+        /// </summary>
+        /// <param name="name">The name of the page to load (must contain file endings!)</param>
+        public static void LoadPageFromResources(string name)
+        {
+            UpdateLocalCache();
+
+            // Find the correct page
+            foreach (CachedPage cp in ResourceLoadedPages)
+            {
+                if (cp.name == name)
+                {
+                    Form1.webBrowser.DocumentText = "0";
+                    Form1.webBrowser.Document.OpenNew(true);
+                    Form1.webBrowser.Document.Write(cp.html);
+                    Form1.webBrowser.Refresh();
+
+                    CurrentPage.name = name;
+                    CurrentPage.html = cp.html;
+
+                    // Exit the loop
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the cache of the current page
+        /// </summary>
+        private static void UpdateLocalCache()
+        {
+            if (CurrentPage.name == null || CurrentPage.name == "")
+                return;
+
+            CurrentPage.html = Form1.webBrowser.Document.GetElementsByTagName("html")[0].OuterHtml;
+
+            // Find the correct page and update it
+            for (int i = 0; i < CachedPages.Count; i++)
+            {
+                if (CachedPages[i].name == CurrentPage.name)
+                {
+                    CachedPages.RemoveAt(i);
+                    CachedPage tmpPage = new CachedPage();
+                    tmpPage.name = CurrentPage.name;
+                    tmpPage.html = CurrentPage.html;
+                    CachedPages.Add(tmpPage);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the cache for a specific page without updateing the current page
+        /// </summary>
+        /// <param name="name">The name of the page (must contain file endings!)</param>
+        /// <param name="html">The html content to update the cache with</param>
+        public static void UpdateCache(string name, string html)
+        {
+            // Find the correct page and update it
+            for (int i = 0; i < CachedPages.Count; i++)
+            {
+                if (CachedPages[i].name == name)
+                {
+                    CachedPages.RemoveAt(i);
+                    CachedPage tmpPage = new CachedPage();
+                    tmpPage.name = name;
+                    tmpPage.html = html;
+                    CachedPages.Add(tmpPage);
                     break;
                 }
             }
