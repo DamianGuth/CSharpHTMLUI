@@ -1,16 +1,7 @@
-﻿using Microsoft.Win32;
+﻿using CSharpHTMLUI.Events;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using IEFixLib;
-using CSharpHTMLUI.Events;
 
 namespace CSharpHTMLUI
 {
@@ -102,7 +93,7 @@ namespace CSharpHTMLUI
         private void Form1_Load(object sender, EventArgs e)
         {
             webBrowser = webBrowser1;
-            Browser.Initialize();
+            Renderer.Initialize();
 
             DemoEvent devent = new DemoEvent();
             HTMLEventHandler.RegisterEvent(devent);
@@ -137,7 +128,22 @@ namespace CSharpHTMLUI
         private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
             lblTitle.Text = webBrowser.Document.Title;
-            Browser.InjectMethods();
+            Renderer.InjectMethods();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Generic.Exit();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Renderer.LoadCachedPage("indexKopie.html");
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Renderer.LoadPageFromResources("index.html");
         }
 
 
