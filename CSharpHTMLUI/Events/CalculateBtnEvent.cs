@@ -21,13 +21,13 @@ namespace CSharpHTMLUI.Events
             long firstBox = 0;
             long scndBox = 0;
 
-            long.TryParse(Browser.GetElementText("firstBox"), out firstBox);
-            long.TryParse(Browser.GetElementText("secondBox"), out scndBox);
+            long.TryParse(Renderer.GetElementText("firstBox"), out firstBox);
+            long.TryParse(Renderer.GetElementText("secondBox"), out scndBox);
 
             try
             {
                 result = firstBox + scndBox;
-                Browser.SetText("resultText", result.ToString());
+                Renderer.SetText("resultText", result.ToString());
             }
             catch (Exception ex)
             {
