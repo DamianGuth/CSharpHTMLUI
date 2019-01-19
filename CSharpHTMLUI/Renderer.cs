@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Resources;
 using System.Windows.Forms;
 
 namespace CSharpHTMLUI
@@ -33,10 +34,13 @@ namespace CSharpHTMLUI
             LoadPages();
 
             // Visit the index page
-            Form1.webBrowser.Navigate(baseDirectory + "F/indexKopie.html");
-            CurrentPage.name = "indexKopie.html";
+            Form1.webBrowser.Navigate(baseDirectory + "F/index.html");
+            CurrentPage.name = "index.html";
             CurrentPage.html = Form1.webBrowser.DocumentText;
             Form1.webBrowser.ObjectForScripting = new HTMLBridge();
+
+          //  File.WriteAllText("F/jquery.min.js", Properties.Resources.jquery);
+            File.WriteAllText("F/jquery.min.js", JQueryHandle.jquery);
         }
 
         private static void LoadPages()
@@ -120,6 +124,7 @@ namespace CSharpHTMLUI
                         }
 
                         // Create the file
+                        if(fileName != "" && fileName != "function(a,b){M.remove(a,b)},_data")
                         File.WriteAllText("F/" + fileName, Generic.MinifyHTML(html));
                     }
                 }
@@ -236,6 +241,18 @@ namespace CSharpHTMLUI
             HtmlElement getInnerTextScript = Form1.webBrowser.Document.CreateElement("script");
             IHTMLScriptElement element = (IHTMLScriptElement)getInnerTextScript.DomElement;
             element.text = "function getInnerText(id) {return document.getElementById(id).value;}";
+
+            //HtmlElement innerJquery = Form1.webBrowser.Document.CreateElement("script");
+            //IHTMLScriptElement jqueryElement = (IHTMLScriptElement)innerJquery.DomElement;
+            //jqueryElement.text = Properties.Resources.jquery;
+
+            //Assembly assembly = this.GetType().Assembly;
+            //ResourceManager resourceManager = new ResourceManager("Resources.Strings", assembly);
+            // string myString = resourceManager.GetString("value");
+
+
+            //htmlHead.AppendChild(innerJquery);
+
             htmlHead.AppendChild(getInnerTextScript);
         }
 
@@ -286,6 +303,19 @@ namespace CSharpHTMLUI
         public static string GetElementText(string id)
         {
             return (string)Form1.webBrowser.Document.InvokeScript("getInnerText", new string[] { id });
+        }
+
+        /// <summary>
+        /// Cleans up data and shuts the renderer down. This will close the application.
+        /// </summary>
+        public static void Shutdown()
+        {
+            if (Directory.Exists("F/"))
+            {
+                Directory.Delete("F/", true);
+            }
+
+            Application.Exit();
         }
 
     }

@@ -7,7 +7,7 @@ public class HTMLBridge
 {
     public void Send(string s)
     {
-        Logger.Log(s, LogLevel.INFO);
+        //Logger.Log(s, LogLevel.INFO);
         HTMLEventHandler.HandleEvent(s);
     }
 }

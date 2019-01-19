@@ -1,12 +1,44 @@
-﻿using CSharpHTMLUI.Events;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using CSharpHTMLUI.Events;
 
 namespace CSharpHTMLUI
 {
     public partial class Form1 : Form
     {
+        public Form1()
+        {
+            InitializeComponent();
+            instace = this;
+            //this.panel1.Width = this.Width - 6;
+            // this.panel1.Height = this.Height - 35;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            webBrowser = webBrowser1;
+            Renderer.Initialize();
+
+            HTMLEventHandler.AutoRegisterEvents();
+            //DemoEvent devent = new DemoEvent();
+           // HTMLEventHandler.RegisterEvent(devent);
+
+            //CalculateBtnEvent cevent = new CalculateBtnEvent();
+            //HTMLEventHandler.RegisterEvent(cevent);
+
+            this.SetStyle(ControlStyles.ResizeRedraw, true); // This is to avoid visual artifacts
+
+            //webBrowser1.DocumentText = "<script>external.log('TEST');</script>";
+        }
+
         /*Form Drawing stuff...*/
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
@@ -81,29 +113,24 @@ namespace CSharpHTMLUI
         public static WebBrowser webBrowser;
         public static Form1 instace;
 
-        public Form1()
+        private void button1_Click_1(object sender, EventArgs e)
         {
-            InitializeComponent();
-            instace = this;
-            this.panel1.Width = this.Width - 6;
-            this.panel1.Height = this.Height - 35;
-
+            //this.Close();
+            Renderer.Shutdown();
+            //Application.Exit();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void button3_Click_1(object sender, EventArgs e)
         {
-            webBrowser = webBrowser1;
-            Renderer.Initialize();
+            this.WindowState = FormWindowState.Minimized;
+        }
 
-            DemoEvent devent = new DemoEvent();
-            HTMLEventHandler.RegisterEvent(devent);
-
-            CalculateBtnEvent cevent = new CalculateBtnEvent();
-            HTMLEventHandler.RegisterEvent(cevent);
-
-            this.SetStyle(ControlStyles.ResizeRedraw, true); // This is to avoid visual artifacts
-
-            //webBrowser1.DocumentText = "<script>external.log('TEST');</script>";
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Maximized)
+                this.WindowState = FormWindowState.Normal;
+            else
+                this.WindowState = FormWindowState.Maximized;
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -117,7 +144,7 @@ namespace CSharpHTMLUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            Renderer.Shutdown();
         }
 
         private void button2_Click_1(object sender, EventArgs e)
@@ -145,8 +172,5 @@ namespace CSharpHTMLUI
         {
             Renderer.LoadPageFromResources("index.html");
         }
-
-
-
     }
 }

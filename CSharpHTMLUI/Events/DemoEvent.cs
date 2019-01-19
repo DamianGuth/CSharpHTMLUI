@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace CSharpHTMLUI.Events
 {
@@ -17,6 +18,7 @@ namespace CSharpHTMLUI.Events
             Renderer.SetText("TESTBUTTON", "CoolText");
             Renderer.SetText("coolDemo", Generic.GetRandomString(32));
             Renderer.GenerateElement("p", "TEXT", "body");
+           // MessageBox.Show("Event registered and fired!");
             Renderer.LoadCachedPage("indexKopie.html");
         }
     }
