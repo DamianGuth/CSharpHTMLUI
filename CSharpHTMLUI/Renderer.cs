@@ -15,6 +15,7 @@ namespace CSharpHTMLUI
         private static List<CachedPage> ResourceLoadedPages = new List<CachedPage>();
         public static List<CachedPage> CachedPages = new List<CachedPage>();
         public static CachedPage CurrentPage = new CachedPage();
+        internal static string defaultPage = "";
 
         public struct CachedPage
         {
@@ -22,22 +23,40 @@ namespace CSharpHTMLUI
             public string html;
         };
 
-        public static void Initialize()
+        public static void Initialize(bool preventEngineFix = false)
         {
-            string processName = Process.GetCurrentProcess().ProcessName + ".exe";
+            if (!preventEngineFix)
+            {
+                string processName = Process.GetCurrentProcess().ProcessName + ".exe";
 
-            BrowserSetup.SetupBrowser();
-            BrowserSetup.SetupBrowser(processName);
-            BrowserSetup.SetupBrowser(processName, 11);
+                BrowserSetup.SetupBrowser();
+                BrowserSetup.SetupBrowser(processName);
+                BrowserSetup.SetupBrowser(processName, 11);
+            }
 
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             LoadPages();
 
             // Visit the index page
-            Form1.webBrowser.Navigate(baseDirectory + "F/index.html");
-            CurrentPage.name = "index.html";
-            CurrentPage.html = Form1.webBrowser.DocumentText;
-            Form1.webBrowser.ObjectForScripting = new HTMLBridge();
+           // Form1.webBrowser.Navigate(baseDirectory + "F/index.html");
+
+
+            if (!File.Exists("F/" + defaultPage))
+            {
+                Logger.Log("Default page not found!", LogLevel.ERROR);
+                throw(new FileNotFoundException());
+            }
+
+            Runner.instance.PlainNavigate(baseDirectory + "F/" + defaultPage);
+            CurrentPage.name = defaultPage;
+
+            //LoadCachedPage("index.html");
+
+
+            //CurrentPage.html = Form1.webBrowser.DocumentText;
+            CurrentPage.html = Runner.instance.GetDocumentText();
+          //  Form1.webBrowser.ObjectForScripting = new HTMLBridge();
+            Runner.instance.SetHTMLBridge(new HTMLBridge());
 
           //  File.WriteAllText("F/jquery.min.js", Properties.Resources.jquery);
             File.WriteAllText("F/jquery.min.js", JQueryHandle.jquery);
@@ -124,8 +143,8 @@ namespace CSharpHTMLUI
                         }
 
                         // Create the file
-                        if(fileName != "" && fileName != "function(a,b){M.remove(a,b)},_data")
-                        File.WriteAllText("F/" + fileName, Generic.MinifyHTML(html));
+                        if (fileName != "" && fileName != "function(a,b){M.remove(a,b)},_data")
+                            File.WriteAllText("F/" + fileName, Generic.MinifyHTML(html));
                     }
                 }
             }
@@ -144,10 +163,12 @@ namespace CSharpHTMLUI
             {
                 if (cp.name == name)
                 {
-                    Form1.webBrowser.DocumentText = "0";
-                    Form1.webBrowser.Document.OpenNew(true);
-                    Form1.webBrowser.Document.Write(cp.html);
-                    Form1.webBrowser.Refresh();
+                    Runner.instance.OpenPageClean(cp.html);
+
+                    //Form1.webBrowser.DocumentText = "0";
+                    //Form1.webBrowser.Document.OpenNew(true);
+                    //Form1.webBrowser.Document.Write(cp.html);
+                    //Form1.webBrowser.Refresh();
 
                     CurrentPage.name = name;
                     CurrentPage.html = cp.html;
@@ -170,10 +191,12 @@ namespace CSharpHTMLUI
             {
                 if (cp.name == name)
                 {
-                    Form1.webBrowser.DocumentText = "0";
-                    Form1.webBrowser.Document.OpenNew(true);
-                    Form1.webBrowser.Document.Write(cp.html);
-                    Form1.webBrowser.Refresh();
+                    Runner.instance.OpenPageClean(cp.html);
+
+                    //Form1.webBrowser.DocumentText = "0";
+                    //Form1.webBrowser.Document.OpenNew(true);
+                    //Form1.webBrowser.Document.Write(cp.html);
+                    //Form1.webBrowser.Refresh();
 
                     CurrentPage.name = name;
                     CurrentPage.html = cp.html;
@@ -192,7 +215,8 @@ namespace CSharpHTMLUI
             if (CurrentPage.name == null || CurrentPage.name == "")
                 return;
 
-            CurrentPage.html = Form1.webBrowser.Document.GetElementsByTagName("html")[0].OuterHtml;
+            //CurrentPage.html = Form1.webBrowser.Document.GetElementsByTagName("html")[0].OuterHtml;
+            CurrentPage.html = Runner.instance.GetElementsByTagName("html")[0].OuterHtml;
 
             // Find the correct page and update it
             for (int i = 0; i < CachedPages.Count; i++)
@@ -237,8 +261,11 @@ namespace CSharpHTMLUI
         public static void InjectMethods()
         {
             // Inject the method to get the text of an item
-            HtmlElement htmlHead = Form1.webBrowser.Document.GetElementsByTagName("head")[0];
-            HtmlElement getInnerTextScript = Form1.webBrowser.Document.CreateElement("script");
+            //HtmlElement htmlHead = Form1.webBrowser.Document.GetElementsByTagName("head")[0];
+           // HtmlElement getInnerTextScript = Form1.webBrowser.Document.CreateElement("script");
+
+            HtmlElement htmlHead = Runner.instance.GetElementsByTagName("head")[0];
+            HtmlElement getInnerTextScript = Runner.instance.CreateElement("script");
             IHTMLScriptElement element = (IHTMLScriptElement)getInnerTextScript.DomElement;
             element.text = "function getInnerText(id) {return document.getElementById(id).value;}";
 
@@ -269,13 +296,14 @@ namespace CSharpHTMLUI
             if (appendToId == "")
                 appendToId = "body";
 
-            HtmlElement element = Form1.webBrowser.Document.CreateElement(type);
+            HtmlElement element = Runner.instance.CreateElement(type);
             element.Id = id;
 
             if (elementText != "")
                 element.InnerText = elementText;
 
-            Form1.webBrowser.Document.GetElementById(appendToId).AppendChild(element);
+          //  Form1.webBrowser.Document.GetElementById(appendToId).AppendChild(element);
+            Runner.instance.GetElementById(appendToId).AppendChild(element);
         }
 
 
@@ -288,7 +316,8 @@ namespace CSharpHTMLUI
         {
             try
             {
-                Form1.webBrowser.Document.GetElementById(elementID).InnerText = text;
+                //Form1.webBrowser.Document.GetElementById(elementID).InnerText = text;
+                Runner.instance.GetElementById(elementID).InnerText = text;
             }
             catch (Exception ex)
             {
@@ -302,21 +331,22 @@ namespace CSharpHTMLUI
         /// <returns>The text of the element</returns>
         public static string GetElementText(string id)
         {
-            return (string)Form1.webBrowser.Document.InvokeScript("getInnerText", new string[] { id });
+            return (string)Runner.instance.ExecuteJavascript("getInnerText", new string[] { id });
+            //return (string)Form1.webBrowser.Document.InvokeScript("getInnerText", new string[] { id });
         }
 
-        /// <summary>
-        /// Cleans up data and shuts the renderer down. This will close the application.
-        /// </summary>
-        public static void Shutdown()
-        {
-            if (Directory.Exists("F/"))
-            {
-                Directory.Delete("F/", true);
-            }
+        ///// <summary>
+        ///// Cleans up data and shuts the renderer down. This will close the application.
+        ///// </summary>
+        //public static void Shutdown()
+        //{
+        //    if (Directory.Exists("F/"))
+        //    {
+        //        Directory.Delete("F/", true);
+        //    }
 
-            Application.Exit();
-        }
+        //    Application.Exit();
+        //}
 
     }
 }

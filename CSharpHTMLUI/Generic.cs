@@ -48,19 +48,5 @@ namespace CSharpHTMLUI
             return html;
         }
 
-
-        /// <summary>
-        /// Closes the application and does some cleanup
-        /// </summary>
-        public static void Exit()
-        {
-            if (Directory.Exists("F/"))
-            {
-                Directory.Delete("F/", true);
-            }
-
-            Application.Exit();
-        }
-
     }
 }

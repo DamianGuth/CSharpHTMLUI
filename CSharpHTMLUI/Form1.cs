@@ -22,22 +22,7 @@ namespace CSharpHTMLUI
             // this.panel1.Height = this.Height - 35;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            webBrowser = webBrowser1;
-            Renderer.Initialize();
-
-            HTMLEventHandler.AutoRegisterEvents();
-            //DemoEvent devent = new DemoEvent();
-           // HTMLEventHandler.RegisterEvent(devent);
-
-            //CalculateBtnEvent cevent = new CalculateBtnEvent();
-            //HTMLEventHandler.RegisterEvent(cevent);
-
-            this.SetStyle(ControlStyles.ResizeRedraw, true); // This is to avoid visual artifacts
-
-            //webBrowser1.DocumentText = "<script>external.log('TEST');</script>";
-        }
+        #region Form drawing stuff
 
         /*Form Drawing stuff...*/
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -108,16 +93,26 @@ namespace CSharpHTMLUI
 
         }
         /*End of Form drawing stuff*/
+        #endregion
 
 
-        public static WebBrowser webBrowser;
+        #region Form controls
+
+      //  public static WebBrowser webBrowser;
         public static Form1 instace;
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.SetStyle(ControlStyles.ResizeRedraw, true); // This is to avoid visual artifacts
+
+            Runner runner = new Runner("index.html", webBrowser1, false);
+            runner.Initiate();
+            runner.SetTitleControl(lblTitle);
+        }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            //this.Close();
-            Renderer.Shutdown();
-            //Application.Exit();
+            Runner.Shutdown();
         }
 
         private void button3_Click_1(object sender, EventArgs e)
@@ -144,7 +139,7 @@ namespace CSharpHTMLUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Renderer.Shutdown();
+            Runner.Shutdown();
         }
 
         private void button2_Click_1(object sender, EventArgs e)
@@ -152,15 +147,9 @@ namespace CSharpHTMLUI
             this.WindowState = FormWindowState.Minimized;
         }
 
-        private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
-        {
-            lblTitle.Text = webBrowser.Document.Title;
-            Renderer.InjectMethods();
-        }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Generic.Exit();
+            Runner.Shutdown();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -172,5 +161,7 @@ namespace CSharpHTMLUI
         {
             Renderer.LoadPageFromResources("index.html");
         }
+        #endregion
+
     }
 }
