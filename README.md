@@ -49,11 +49,6 @@ Here is an example for the index.html
 <!--EOF-->
 ```
 
-# Goal
-The Goal is to be able to create complete form applications using HTML, CSS and JavaScript which can be deployed onto other devices.
-
-# More information
-As you might be able to see, this Readme is quite empty. So any help with the support is appreciated! Lets see how far this project will go.
 
 # First Todo´s
 - ~~Add control caching for fast UI changes~~
